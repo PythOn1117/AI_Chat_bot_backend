@@ -15,7 +15,7 @@ class AuthenticationMiddleware:
     def __call__(self, request):
         print("AuthenticationMiddleware start")
         if request.path not in no_auth_url:
-            if not request.session.get('user', None) or not User.objects.filter(id=request.session['user'].id).exists():
+            if not request.session.get('user', None) or not User.objects.filter(id=getattr(request.session['user'], 'id', 0)).exists():
                 return JsonResponse({'code': 1, 'msg': "请先登录再执行操作"})
 
         response = self.get_response(request)
