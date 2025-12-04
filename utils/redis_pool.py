@@ -9,10 +9,14 @@ class RedisPoolManager:
     """
     _instance = None
     _pool = None
+
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
             cls._instance = super(RedisPoolManager, cls).__new__(cls)
         return cls._instance
+
+    def __init__(self):
+        self.init_pool()
 
     @classmethod
     def init_pool(cls):
@@ -25,7 +29,7 @@ class RedisPoolManager:
                 'host': redis_conf['host'],
                 'port': redis_conf['port'],
                 'db': 0,
-                'password': redis_conf['password'],
+                'password': redis_conf['passwd'],
                 'decode_responses': True,
                 'socket_timeout': 30,
                 'max_connections': 20,
@@ -48,7 +52,11 @@ class RedisPoolManager:
             return client
         except Exception as e:
             print("Redis Client 获取失败， 尝试重新初始化连接池")
-            self.init_pool()
+            try:
+                self.init_pool()
+            except Exception as e:
+                print("Redis Client 仍然获取失败")
+                raise e
             return redis.Redis(connection_pool=self._pool)
 
     def close_pool(self):
