@@ -1,6 +1,9 @@
 import redis
 
 from utils.sys_config_reader import SysConfigReader
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class RedisPoolManager:
@@ -37,9 +40,9 @@ class RedisPoolManager:
             }
 
             cls._pool = redis.ConnectionPool(**conf_dict)
-            print("Redis连接池初始化成功")
+            logger.info("Redis连接池初始化成功")
         except Exception as e:
-            print("Redis连接池初始化失败")
+            logger.error("Redis连接池初始化失败")
             raise e
 
     def get_client(self):
@@ -51,11 +54,10 @@ class RedisPoolManager:
             client.ping()
             return client
         except Exception as e:
-            print("Redis Client 获取失败， 尝试重新初始化连接池")
+            logger.warning("Redis Client 获取失败， 尝试重新初始化连接池")
             try:
                 self.init_pool()
             except Exception as e:
-                print("Redis Client 仍然获取失败")
                 raise e
             return redis.Redis(connection_pool=self._pool)
 
