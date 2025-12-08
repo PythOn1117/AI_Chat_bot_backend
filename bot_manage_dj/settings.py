@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 from utils.sys_config_reader import SysConfigReader
+from decouple import config
 
 sys_config = SysConfigReader()
 
@@ -30,6 +31,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+DEEPSEEK_API_KEY = config('DEEPSEEK_API_KEY')
+DEEPSEEK_BASE_URL = config('DEEPSEEK_BASE_URL')
 
 # Application definition
 
@@ -53,7 +56,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'user.middleware.auth_middleware.AuthenticationMiddleware'
+    'user.middleware.auth_middleware.AuthenticationMiddleware',
+    'bot_manage_dj.middleware.response_middleware.APIResponseMiddleware',
 ]
 
 ROOT_URLCONF = 'bot_manage_dj.urls'
