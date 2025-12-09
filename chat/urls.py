@@ -6,5 +6,5 @@ from chat import views
 app_name = 'chat'
 
 urlpatterns = [
-    path('api/ask_question/', views.QuestionView.as_view(), name='ask_question'),
+    path('api/ask_question', views.QuestionView.as_view(), name='ask_question'),
 ]

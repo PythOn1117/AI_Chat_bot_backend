@@ -1,7 +1,10 @@
 import logging
+import traceback
+
 from django.conf import settings
-from typing import List, Dict
 from openai import OpenAI
+from chat.prompt.completion_service import add_content_to_history
+from chat.prompt.completion_service import completion_msg, get_history_content
 
 logger = logging.getLogger(__name__)
 
@@ -19,8 +22,12 @@ class LlmClient:
             max_retries=2,
         )
 
-    def chat_completion(self, message: List[Dict], stream=False):
+    def chat_completion(self, user, question, stream=False):
         try:
+            history = get_history_content(user)
+
+            message = completion_msg(history, question)
+
             response = self.client.chat.completions.create(
                 messages=message,
                 model="deepseek-chat",
@@ -29,8 +36,10 @@ class LlmClient:
                 temperature=0.7,
             )
             content = response.choices[0].message.content
+
+            add_content_to_history(user, message, content)
             logger.info(f"DeepSeek API 请求成功， tokens: {response.usage.total_tokens}")
             return content
         except Exception as e:
-            logger.error(e)
+            logger.error(traceback.format_exc())
             raise e
