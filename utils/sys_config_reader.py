@@ -27,5 +27,8 @@ class SysConfigReader:
     def get_redis_config(self):
         return self.config_items['redis']
 
+    def get_config(self, component):
+        return self.config_items[component]
+
 
 

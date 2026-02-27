@@ -67,18 +67,31 @@ TEMPLATES = [
 WSGI_APPLICATION = 'bot_manage_dj.wsgi.application'
 
 mysql_conf = sys_config.get_mysql_config()
+pgsql_conf = sys_config.get_config("pgsql")
+
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': mysql_conf['db'],
+    #     'USER': mysql_conf['user'],
+    #     'PASSWORD': mysql_conf['passwd'],
+    #     'HOST': mysql_conf['host'],
+    #     'PORT': mysql_conf['port'],
+    #     'OPTIONS': {
+    #         'charset': 'utf8mb4',
+    #         'init_command': "SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci"
+    #     }
+    # }
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': mysql_conf['db'],
-        'USER': mysql_conf['user'],
-        'PASSWORD': mysql_conf['passwd'],
-        'HOST': mysql_conf['host'],
-        'PORT': mysql_conf['port'],
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': pgsql_conf['db'],
+        'USER': pgsql_conf['user'],
+        'PASSWORD': pgsql_conf['passwd'],
+        'HOST': pgsql_conf['host'],
+        'PORT': pgsql_conf['port'],
         'OPTIONS': {
-            'charset': 'utf8mb4',
-            'init_command': "SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci"
-        }
+            'connect_timeout': 10,
+        },
     }
 }
 

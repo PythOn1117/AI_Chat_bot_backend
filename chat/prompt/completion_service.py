@@ -15,11 +15,11 @@ def get_history_content(user):
                     user.userchathistory_set.exists() and json.loads(user.userchathistory_set.first().content) or \
                     []
     logger.info("user_history:%s", user_history)
-    return user_history if len(user_history) <= 10 else user_history[len(user_history) - 10:]
+    return user_history[-6:]
 
 
 def completion_msg(history, question):
-    history.append({"role": "system", "content": question})
+    history.append({"role": "user", "content": question})
     return history
 
 
@@ -29,7 +29,7 @@ def add_content_to_history(user: User, history, result):
         logger.error("add_content_to_history -- User not found")
         raise Exception("用户不存在")
 
-    history.append({"role": "system", "content": result})
+    history.append({"role": "assistant", "content": result})
 
     user.userchathistory_set.update_or_create(user=user, defaults={"content": json.dumps(history)})
     r_cli.set(system_global.USER_HISTORY_CACHE_KEY % user.id, json.dumps(history), ex=3600)

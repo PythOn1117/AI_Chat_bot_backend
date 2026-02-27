@@ -3,16 +3,11 @@ import logging
 import traceback
 
 from django.core.handlers.wsgi import WSGIRequest
-from django.http import HttpRequest
-from django.shortcuts import render
 from django.views import View
 
 from chat.service import LlmClient
 from utils.response_utils import set_response, set_error
 
-
-
-# Create your views here.
 
 logger = logging.getLogger(__name__)
 
