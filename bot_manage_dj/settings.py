@@ -17,8 +17,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-DEEPSEEK_API_KEY = config('DEEPSEEK_API_KEY')
-DEEPSEEK_BASE_URL = config('DEEPSEEK_BASE_URL')
+DEEPSEEK_API_KEY = config('DEEPSEEK_API_KEY', default='')
+DEEPSEEK_BASE_URL = config('DEEPSEEK_BASE_URL', default='')
+
+# 多模型配置支持
+DEFAULT_MODEL = config('DEFAULT_MODEL', default='deepseek')
 
 # Application definition
 

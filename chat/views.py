@@ -22,10 +22,11 @@ class QuestionView(View):
         if not question:
             return set_error("问题不能为空")
         stream = params.get('stream', False)
+        model = params.get('model', None)  # 新增模型参数
 
         user = request.session.get("user")
         try:
-            content = LlmClient().chat_completion(user, question, stream=stream)
+            content = LlmClient(model_provider=model).chat_completion(user, question, stream=stream)
         except Exception as e:
             logger.error(traceback.format_exc())
             return set_error("请求失败")
